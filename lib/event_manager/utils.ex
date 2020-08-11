@@ -26,4 +26,20 @@ defmodule EventManager.Utils do
     end
   end
 
+  def struct_from_map(a_map, as: a_struct) do
+    # Find the keys within the map
+    keys =
+      Map.keys(a_struct)
+      |> Enum.filter(fn x -> x != :__struct__ end)
+
+    processed_map =
+      for key <- keys, into: %{} do
+          # Process map, checking for both string / atom keys
+          value = Map.get(a_map, key) || Map.get(a_map, to_string(key))
+          {key, value}
+      end
+
+      Map.merge(a_struct, processed_map)
+  end
+
 end
