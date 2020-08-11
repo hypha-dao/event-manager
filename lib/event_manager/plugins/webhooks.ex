@@ -43,7 +43,7 @@ defimpl EventManager.Plugins, for: EventManager.Plugins.WebHooks  do
         HTTPoison.post(url, Jason.encode!(payload), header)
 
       "GET" ->
-        HTTPoison.get(url, Jason.encode!(payload), header)
+        HTTPoison.get(url)
 
       _ ->
         {:error, :INVALID_METHOD}
