@@ -6,7 +6,7 @@ defmodule EventManager.Repository.Metadata do
     channels: [
       %{
         type: "discord",
-        api_url: "https://discordapp.com/api/webhooks/742742973787144252/8rHAimYM91oUUTRf-UgoNhr53wZkq0yi09nmnrvNmcOxtCnjodMfmH1eVXf5FrFl6TZw",
+        api_url: "",
         vars: ["creator", "recipient", "quantity", "title", "summary", "description", "image", "url"],
         fields: %{
           content: "${{creator}} created new Proposal",
