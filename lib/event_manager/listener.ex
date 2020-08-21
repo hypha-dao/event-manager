@@ -18,6 +18,7 @@ defmodule EventManager.Listener do
       worker_pid: nil,
       token: nil
     }
+    monitor_process()
 
     {:ok, initial_state}
   end
