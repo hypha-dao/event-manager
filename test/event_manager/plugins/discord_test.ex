@@ -5,24 +5,20 @@ defmodule EventManager.Plugins.DiscordTest do
   alias EventManager.Plugins.Discord
   alias EventManager.Repository
 
-  @data %{
-    "creator" => "seedsforlife",
-    "title" =>  "(Example) \"Launch Partner\" Proposal",
-    "summary" =>  "See details for an example Launch Partnership...",
-    "description" =>  "Our ask: 170k Seeds for:\n\n120k to gift to our community. We'll create a garden-planting challenge and reward each person with 150 Seeds.\n\n40k for the \"Local Food Platform\" team. For our contributions to the local food movement and creating a healthier world. \n\nOur Offer:\n\nWe'll encourage people to use Seeds by giving a small discount and designing our platforms UI to ask for Seeds first.\n\nWe'll give a 10% & 15% discount to residents and citizens (respectively). \n\nWe ask that 1/2 of this discount is reimbursed in Seeds (capped at 10k Seeds.) \n\nWe're going to be using SEEDS anyway and would love to have this promotion to help us further the local food movement and create a healthier Society!\n\nThank you. \n\n",
-    "image" =>  "https://seeds-service.s3.amazonaws.com/development/57112531-4869-4c06-b0b3-6dc17f39b0b9/cf296885-2184-4349-9582-d4ded33f9de3-1920.jpg"
-  }
+  @data "000030adfa06a8490000000000d0986b171061737369676e65645f6163636f756e7400104cabbef9391b7d0962616c6c6f745f696400d201000004d3aa6f0e636c69656e745f76657273696f6e010f312e302e313320306338316464653610636f6e74726163745f76657273696f6e010e312e302e312033363665386466651264656665727265645f706572635f783130300432000000000000000b6465736372697074696f6e010b46524f4d204a53444444440a656e645f706572696f64043c0000000000000015687573645f73616c6172795f7065725f706861736502639400000000000002485553440000001768766f6963655f73616c6172795f7065725f7068617365028e510200000000000248564f494345001668797068615f73616c6172795f7065725f7068617365020859000000000000024859504841000016696e7374616e745f687573645f706572635f78313030043200000000000000126f726967696e616c5f6f626a6563745f69640400000000000000000e6f726967696e616c5f73636f70650000409e4a4ee63036056f776e657200104cabbef9391b7d07726f6c655f69640400000000000000001d73656564735f657363726f775f73616c6172795f7065725f7068617365028054c21a0000000004534545445300000c73746172745f706572696f64043a000000000000000f74696d655f73686172655f78313030043200000000000000057469746c650100137472785f616374696f6e5f636f6e747261637400000030adfa06a8490f7472785f616374696f6e5f6e616d6500003252ef50c5ae920474797065000000000000905d520375726c0100"
 
   describe "Discord Plugin Test" do
     test "Discord notification test " do
+      parsed_data = EventManager.Eos.unpack_data(@data)
+
       discord_params =
-        EventManager.Repository.Metadata.search_metadata("create", "seedsprpslsx")
+        EventManager.Repository.Metadata.search_metadata("event", "publsh.hypha")
         |> List.first()
-        |> Repository.parse_metadata(@data)
+        |> Repository.parse_metadata(parsed_data)
         |> List.first()
         |> Discord.new()
 
-      assert {:ok, _resp} = Plugins.send_request(discord_params)
+      assert {:ok, _resp} = EventManager.Handler.handle_action(%{"act" => %{"data" => @data}})
     end
   end
 end

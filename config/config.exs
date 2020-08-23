@@ -23,6 +23,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :event_manager, :dho_discord_url, System.get_env("DHO_DISCORD_WEBHOOK_URL")
+config :event_manager, :eos_mongo_url, System.get_env("EOS_MONGO_URL")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"
