@@ -3,6 +3,11 @@ defmodule EventManager.Repository do
   @moduledoc """
 
   """
+  def parse_metadata(channels, data) when is_list(channels) do
+    Enum.reduce(channels, [], fn channel_info, acc ->
+      acc ++ parse_metadata(channel_info, data)
+    end)
+  end
   def parse_metadata(%{channels: channels}, data) when is_map(data) do
     channels
     |> Enum.map(&(parse_variables(&1, data)))
@@ -10,7 +15,7 @@ defmodule EventManager.Repository do
 
   def parse_metadata(%{channels: channels}, _), do: channels
 
-  def parse_metadata(_, _), do: nil
+  def parse_metadata(_, _), do: []
 
 
 

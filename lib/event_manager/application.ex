@@ -9,6 +9,7 @@ defmodule EventManager.Application do
     children = [
       # Start the Telemetry supervisor
       EventManagerWeb.Telemetry,
+      EventManager.Listener,
       # Start the PubSub system
       {Phoenix.PubSub, name: EventManager.PubSub},
       # Start the Endpoint (http/https)

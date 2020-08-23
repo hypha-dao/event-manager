@@ -18,7 +18,7 @@ defmodule EventManager.Plugins.DiscordTest do
         |> List.first()
         |> Discord.new()
 
-      assert {:ok, _resp} = Plugins.send_request(discord_params)
+      assert {:ok, _resp} = EventManager.Handler.handle_action(%{"act" => %{"data" => @data}})
     end
   end
 end

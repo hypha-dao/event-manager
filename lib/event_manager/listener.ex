@@ -27,16 +27,23 @@ defmodule EventManager.Listener do
   def handle_info(:watch, %{mongo_pid: m_pid, worker_pid: w_pid} = state)
     when is_pid(m_pid) and is_pid(w_pid) do
 
-    if Process.alive?(m_pid) and Process.alive?(w_pid) do
-      %{mongo_pid: m_pid, worker_pid: w_pid}
-    else
-      Logger.error("Blockchain Watcher Process Failed")
-      Logger.info("Killing old process")
-      Process.exit(m_pid, :kill)
-      Process.exit(w_pid, :kill)
-      spawn_process(state, self())
+    pid_state =
+      if Process.alive?(m_pid) and Process.alive?(w_pid) do
+        %{mongo_pid: m_pid, worker_pid: w_pid}
+      else
+        Logger.error("Blockchain Watcher Process Failed")
+        Logger.info("Killing old process")
+        Process.exit(m_pid, :kill)
+        Process.exit(w_pid, :kill)
+        spawn_process(state, self())
+      end
 
-    end
+    {:noreply, Map.merge(state, pid_state)}
+  end
+
+  @impl true
+  def handle_info(:watch, %{mongo_pid: nil, worker_pid: nil} = state) do
+    {:noreply, Map.merge(state, spawn_process(state, self()))}
   end
 
   @impl true
@@ -51,15 +58,25 @@ defmodule EventManager.Listener do
   end
 
   @impl true
-  def handle_info({:new_data, data}, state) do
-    EventHandler.broadcast_event(data)
+  def handle_info({:new_data, action}, state) do
+    actual_data =
+      get_in(action, ["act", "data"])
+      |> EventManager.Eos.unpack_data()
+
+    action =
+      put_in(action, ["act", "data"], actual_data)
+
+    IO.inspect action["act"]["data"]
+
+    EventHandler.broadcast_event(action)
+    EventManager.Handler.handle_action(action)
 
     {:noreply, state}
   end
 
 
   defp get_mongo_topology() do
-    mongo_url = Application.get_env(:plants, :eos_mongo_url)
+    mongo_url = Application.get_env(:event_manager, :eos_mongo_url)
     case Mongo.start_link(url: mongo_url) do
       {:ok, pid} ->
         pid
@@ -83,7 +100,7 @@ defmodule EventManager.Listener do
     watcher_pid = spawn(fn -> watch_collection(mongo_pid, pid, resume_token) end)
 
     Logger.info("Executed new Watcher Process")
-    %{mongo_id: mongo_pid, watcher_id: watcher_pid}
+    %{mongo_id: mongo_pid, worker_pid: watcher_pid}
   end
 
 

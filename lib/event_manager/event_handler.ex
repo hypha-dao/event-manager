@@ -14,11 +14,14 @@ defmodule EventManager.EventHandler do
 
   end
 
-  def broadcast_event(action) do
+  def broadcast_event(%{"act" => %{"data" => data}} = action ) when is_map(data) do
+
     ["ALL" | extract_account_name(action)]
     |> Enum.map(&(broadcast(&1, @event_name, action)))
 
   end
+
+  def broadcast_event(_), do: nil
 
   def extract_account_name(action) do
     @accounts_vars

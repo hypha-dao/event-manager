@@ -36,6 +36,7 @@ defmodule EventManager.Plugins.Discord do
         "name" => Map.get(field_info, :author_name)
       },
       "title" => Map.get(field_info, :title),
+      "color" => 51167,
       "url" => Map.get(field_info, :url),
       "description" => Map.get(field_info, :description),
       "image" => %{
