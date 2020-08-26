@@ -69,7 +69,7 @@ defmodule EventManager.Listener do
     IO.inspect action["act"]["data"]
 
     EventHandler.broadcast_event(action)
-    EventManager.Handler.handle_action(action)
+    IO.inspect EventManager.Handler.handle_action(action)
 
     {:noreply, state}
   end
