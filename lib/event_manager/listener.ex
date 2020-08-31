@@ -66,7 +66,6 @@ defmodule EventManager.Listener do
     action =
       put_in(action, ["act", "data"], actual_data)
 
-    IO.inspect action["act"]["data"]
 
     EventHandler.broadcast_event(action)
     EventManager.Handler.handle_action(action)

@@ -70,7 +70,10 @@ defimpl EventManager.Plugins, for: EventManager.Plugins.Discord  do
   alias EventManager.Plugins.WebHooks
 
   def send_request(%Discord{api_url: api_url} = discord) do
-    payload = Discord.generate_payload(discord)
+    payload =
+      Discord.generate_payload(discord)
+      |> EventManager.Utils.map_without_nil()
+
     IO.inspect payload
 
     WebHooks.new(%{"url" => api_url, "payload" => payload})
