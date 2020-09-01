@@ -9,7 +9,7 @@ defmodule EventManager.EventHandler do
   ]
 
   @event_name "NEW_TX"
-  def handle_event(action) do
+  def handle_event(_action) do
 
 
   end

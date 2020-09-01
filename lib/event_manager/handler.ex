@@ -25,7 +25,6 @@ defmodule EventManager.Handler do
         channel
         |> Discord.new()
         |> Plugins.send_request()
-        |> IO.inspect()
 
       _ ->
         nil
