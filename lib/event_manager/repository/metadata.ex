@@ -32,7 +32,8 @@ defmodule EventManager.Repository.Metadata do
           title: "${{title}}",
           description: "${{description}}",
           author_name: "${{owner}}",
-          url: "${{url}}"
+          url: "${{url}}",
+          content: "${{Event}}"
         },
         fields: [
           "deferred_perc_x100",

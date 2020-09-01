@@ -48,8 +48,12 @@ defmodule EventManager.Utils do
         is_nil(v) ->
           acc
 
+        v == "" ->
+          acc
+
         is_binary(v) and String.upcase(v) == "NULL" ->
           acc
+
 
         true ->
           Map.put(acc, k, v)

@@ -23,10 +23,21 @@ defmodule EventManager.Plugins.Discord do
   end
 
   def generate_payload(%Discord{field_info: infos, fields: fields}) do
+    embeds =
+      prepare_embeds(infos, fields)
+      |> Utils.map_without_nil()
+
+    content =
+      case Map.get(infos, :content) do
+        "${{Event}}" -> nil
+        content -> content
+      end
+
     %{
       "username" => "hypha",
       "avatar_url" => "https://avatars0.githubusercontent.com/u/64083170?s=200&v=4",
-      "embeds" => [prepare_embeds(infos, fields)]
+      "embeds" => [embeds],
+      "content" => content
     }
   end
 
@@ -55,7 +66,17 @@ defmodule EventManager.Plugins.Discord do
           "inline" => true
         }
 
-        { [new_field | acc_fields], index + 0.5 }
+        IO.inspect Utils.map_without_nil(new_field)
+
+        case Utils.map_without_nil(%{"value"  => v}) do
+          %{"value" => _v} ->
+            { [new_field | acc_fields], index + 0.5 }
+
+
+          _ ->
+            {acc_fields, index}
+        end
+
       end)
 
     fields
