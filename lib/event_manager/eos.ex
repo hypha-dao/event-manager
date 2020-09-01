@@ -2,6 +2,7 @@ defmodule EventManager.Eos do
 
   def unpack_data(hash, acc_name \\ "publsh.hypha", action \\ "event") do
     if is_binary(hash) do
+
       cmds = ["-u", "https://node.hypha.earth", "convert", "unpack_action_data", acc_name, action, hash]
       case System.cmd("cleos", cmds) do
         {"", _} ->

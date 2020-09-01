@@ -42,4 +42,23 @@ defmodule EventManager.Utils do
       Map.merge(a_struct, processed_map)
   end
 
+  def map_without_nil(params) do
+    Enum.reduce(params, %{}, fn {k, v}, acc ->
+      cond do
+        is_nil(v) ->
+          acc
+
+        v == "" ->
+          acc
+
+        is_binary(v) and String.upcase(v) == "NULL" ->
+          acc
+
+
+        true ->
+          Map.put(acc, k, v)
+      end
+    end)
+  end
+
 end

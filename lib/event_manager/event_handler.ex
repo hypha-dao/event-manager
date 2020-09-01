@@ -9,8 +9,8 @@ defmodule EventManager.EventHandler do
   ]
 
   @event_name "NEW_TX"
-  def handle_event(action) do
-    IO.inspect action
+  def handle_event(_action) do
+
 
   end
 
